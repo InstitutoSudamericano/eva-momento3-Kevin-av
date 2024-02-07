@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+@CrossOrigin(methods = [RequestMethod.GET, RequestMethod.POST, RequestMethod.PATCH, RequestMethod.PUT, RequestMethod.DELETE])
+
 @RestController
 @RequestMapping("/film")
 class FilmController {
@@ -23,4 +25,24 @@ class FilmController {
         return ResponseEntity<Film>(filmService.save(film), HttpStatus.CREATED)
     }
 
+    @PutMapping
+    fun update (@RequestBody film: Film): ResponseEntity<Film>{
+        return ResponseEntity(filmService.update(film), HttpStatus.OK)
+    }
+
+    @PatchMapping
+    fun updateDirector (@RequestBody film: Film):ResponseEntity<Film>{
+        return ResponseEntity(filmService.updateDirector(film), HttpStatus.OK)
+    }
+
+    @GetMapping("/{id}")
+    fun listById (@PathVariable("id") id: Long): ResponseEntity<*>{
+        return ResponseEntity(filmService.listById (id), HttpStatus.OK)
+
+    }
+
+    @DeleteMapping("/delete/{id}")
+    fun delete (@PathVariable("id") id: Long):Boolean?{
+        return filmService.delete(id)
+    }
 }

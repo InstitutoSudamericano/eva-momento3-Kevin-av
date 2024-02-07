@@ -19,12 +19,53 @@ class FilmService {
     fun save (film:Film): Film{
         try{
             film.title?.takeIf { it.trim().isNotEmpty() }
-                ?: throw Exception("Film no debe ser vacio")
+                ?: throw Exception("Film no debe estar vacio")
             return filmRepository.save(film)
         }
         catch (ex: Exception){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST,ex.message)
         }
+    }
 
+    fun update(film: Film): Film{
+        try{
+            filmRepository.findById(film.id)
+                ?:throw Exception("El Id escrito no existe")
+
+            return filmRepository.save(film)
+        }
+        catch (ex:Exception){
+            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
+        }
+    }
+
+    fun updateDirector(film: Film): Film{
+        try {
+            val response = filmRepository.findById(film.id)
+                ?:throw Exception ("El Id escrito no existe")
+            response.apply {
+                director=film.director
+            }
+            return filmRepository.save(response)
+        }
+        catch (ex:Exception){
+            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
+        }
+    }
+
+    fun listById (id:Long?):Film?{
+        return filmRepository.findById(id)
+    }
+
+    fun delete (id: Long?):Boolean?{
+        try{
+            val response = filmRepository.findById(id)
+                ?: throw Exception("El ID escrito no existe")
+            filmRepository.deleteById(id!!)
+            return true
+        }
+        catch (ex:Exception){
+            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
+        }
     }
 }
