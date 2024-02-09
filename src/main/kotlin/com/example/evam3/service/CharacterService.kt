@@ -1,6 +1,7 @@
 package com.example.evam3.service
 
 import com.example.evam3.entity.Character
+import com.example.evam3.entity.Scene
 import com.example.evam3.repository.CharacterRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -19,7 +20,7 @@ class CharacterService {
     fun save (character: Character): Character{
         try {
             character.description?.takeIf { it.trim().isNotEmpty() }
-                    ?: throw Exception("La descripción de la escena no debe estar vacía")
+                ?: throw Exception("La descripción del personaje no debe estar vacía")
 
             return characterRepository.save(character)
         } catch (ex: Exception) {
